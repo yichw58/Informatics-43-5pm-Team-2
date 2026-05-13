@@ -1,10 +1,5 @@
 # Running the Mingle Prototype
 
-## Prerequisites
-- Python 3.9+
-- Node.js 18+
-
----
 
 ## 1. Start the backend
 
