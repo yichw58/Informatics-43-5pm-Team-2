@@ -12,4 +12,9 @@ Summary: We assigned sections of the Requirements Specification (HW 1) to indivi
 **May 6, 2026**  
 In-person  
 Attendees: Arjun, Chloe, Andrew, Katrina, Yanjie  
-Summary: We finished all of our solo exploration over the past week, so we got together to decide on the overall architecture of our program. We determined which languages, architecture patterns, components, and protocols we would use, and delegated who would be completing the different sections of HW 2.
+Summary: We finished all of our solo exploration over the past week, so we got together to decide on the overall architecture of our program. We determined which languages, architecture patterns, components, and protocols we would use, and delegated who would be completing the different sections of HW 2.  
+
+**May 13, 2026**  
+In-person  
+Attendees: Arjun, Chloe, Andrew, Katrina, Yanjie  
+Summary: We decided on which user flows we would include in the mockups of our user interface. Additionally, we delegated who would work more on UI vs. testing, as we’re going to test as we create the UI and expand our prototype. We also discussed the timeframes in which we should finish our parts and how many aspects we’re planning to implement for our final demo.  
