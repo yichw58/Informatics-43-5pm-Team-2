@@ -99,11 +99,11 @@
 
 | Member | Owns which test categories / components |
 |---|---|
-| Arjun Vivek | Backend unit tests (`haversine`, `pair`, password, suppression logic); integration tests (auth, connection requests, privacy) |
-| Chloe Keirn | *(fill in)* |
-| Andrew Ji | *(fill in)* |
-| Katrina Yichen Wang | *(fill in)* |
-| Yanjie Li | *(fill in)* |
+| Arjun Vivek | Backend unit tests (`haversine`, `pair`, password hashing, suppression logic); integration tests (auth flow, connection requests, location privacy) |
+| Chloe Keirn | Integration tests for profile update and tag subscription; frontend component testing strategy |
+| Andrew Ji | Integration tests for map filtering, status update authorization, and location visibility |
+| Katrina Yichen Wang | Integration tests for chat threads, message sending, and streak tracking |
+| Yanjie Li | Integration tests for leaderboard, blackout zones, and schedule privacy; coverage reporting |
 
 ---
 
