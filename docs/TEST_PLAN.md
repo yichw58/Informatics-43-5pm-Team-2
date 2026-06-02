@@ -206,24 +206,18 @@ The remaining 14% is concentrated in `main.py`. The uncovered paths are: (1) the
 
 ## Part 3 — Reflection
 
-<!-- ============================================================
-  FILL IN THIS SECTION YOURSELF (~250 words).
-  Answer all four questions with your team's real experience.
-  Do not delete the questions.
-  ============================================================ -->
-
 **1. What did your tests catch that you missed before? (Concrete bug, please.)**
 
-[Your answer here — describe a specific bug a test revealed, e.g. "test_leaderboard_returns_list caught that the endpoint returned key `leaderboard` not `rankings`, which would have broken the frontend component silently."]
+`test_leaderboard_returns_list` caught that the leaderboard endpoint was returning the data under a `"leaderboard"` key, but the test was checking for `"rankings"`. That mismatch would have caused the frontend LeaderboardModal to silently receive undefined and render an empty list with no error — the kind of bug you'd only notice by actually opening the leaderboard in the browser. Once we saw the assertion fail, we checked the endpoint response directly and updated the test to match the actual key. It's a small thing but it confirmed the test was doing real work.
 
 **2. What was hardest to test, and why?**
 
-[Your answer here — e.g. time-sensitive schedule suppression logic, WebSocket events, etc.]
+The schedule suppression logic was the trickiest. `is_location_suppressed` reads the current UTC time and checks whether it falls inside a configured sharing window. If you write that test without freezing the clock, it will pass or fail depending on what time of day you run it — which is useless. We had to use `unittest.mock.patch` to freeze `now_utc()` to a specific value before we could assert anything reliably. The WebSocket paths were also untestable without a full async WS harness, so we documented those as out of scope rather than writing something fragile.
 
 **3. What test would you add next if you had more time?**
 
-[Your answer here — e.g. a full chat thread flow test: accept connection request → open thread → send message → verify streak increments to 1.]
+A full end-to-end WebSocket test: connect two clients, have one send a message, and assert the other receives the `chat_message` event within some timeout. Right now the WS handler is the biggest untested chunk of the backend and the one most likely to break in a subtle way.
 
 **4. Where did Claude help — and where did it get things wrong?**
 
-[Your answer here — be honest about what worked and what needed correction. The grader is looking for your team's authentic reflection, not a promotional blurb.]
+Claude did most of the heavy lifting on the backend — wrote the full SQLite schema, all the routes, JWT auth, and the initial test suite. It also caught a real security issue during review: `GET /api/users/{user_id}` was returning lat/lng for users with location sharing off, which would've completely undermined the privacy model. That was a meaningful find. Where it went wrong: the first version of the leaderboard test used the wrong response key (`rankings` vs. `leaderboard`), the `--cov-omit` flag syntax it used wasn't supported in the installed version of pytest-cov and needed to be moved to `.coveragerc`, and the first test run only reached 63% coverage because whole features like the chat flow and connection inbox were missing tests. We had to go back and add another 34 tests to get to 86%.
