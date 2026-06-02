@@ -43,7 +43,7 @@
 - The 10-tag hard limit is enforced server-side and returns a clear 400 error
 - Status changes made by user A to user B's account return 403
 - The schedule/blackout suppression logic correctly suppresses location inside a blackout zone and outside the time window, and correctly permits it otherwise
-- Combined test coverage ≥ 60% of backend source lines (achieved: 63%)
+- Combined test coverage ≥ 60% of backend source lines (achieved: 86%)
 - All 50 tests pass on a fresh clone after `pip install -r requirements.txt`
 
 ---
@@ -114,18 +114,18 @@
 | Category | Required? | Minimum | Implemented |
 |---|---|---|---|
 | Unit tests | Required | ≥ 5 | **23** |
-| Integration tests | Required | ≥ 3 | **27** |
+| Integration tests | Required | ≥ 3 | **61** |
 
 ---
 
 ### 2.3 Tests by Category
 
-Last updated: 2026-06-02 (commit 9f2a039)
+Last updated: 2026-06-02 (commit cc7fa0c)
 
 | Category | Count | Examples |
 |---|---|---|
 | Unit | 23 | `test_haversine_known_distance` — verifies UCI→nearby-point distance is ~0.6 mi; `test_schedule_suppresses_outside_window` — freezes `now_utc` to 23:30 UTC and asserts suppression fires for an 08:00–22:00 window; `test_blackout_zone_suppresses_inside_radius` — zone centered on user's exact coords returns True; `test_serialize_user_excludes_email_by_default` — confirms email never leaks on public calls; `test_different_hashes_for_same_password` — bcrypt salting produces unique hashes each time |
-| Integration | 27 | `test_duplicate_email_rejected` — second register with same email returns 400 "already registered"; `test_connection_request_out_of_range` — moves user B to New York directly in the DB, then verifies request returns 400 "out of range"; `test_tag_limit_enforced` — subscribes 10 tags then attempts an 11th, expects 400; `test_map_filter_by_tag` — only user B (with #hiking) appears when tag filter is applied; `test_status_update_other_user_forbidden` — user A patching user B's status returns 403 |
+| Integration | 61 | `test_duplicate_email_rejected` — second register with same email returns 400 "already registered"; `test_connection_request_out_of_range` — moves user B to New York directly in the DB, then verifies request returns 400 "out of range"; `test_tag_limit_enforced` — subscribes 10 tags then attempts an 11th, expects 400; `test_streak_increments_on_each_message` — sends 3 messages, verifies streak count is 3; `test_location_update_inside_blackout_is_suppressed` — updating location inside a configured blackout zone returns suppressed=True; `test_token_for_deleted_user_returns_401` — valid JWT for a deleted user is rejected; `test_get_user_hides_location_when_invisible` — location coords are null for a user with locationVisible=false |
 
 ---
 
@@ -135,9 +135,10 @@ Last updated: 2026-06-02 (commit 9f2a039)
 prototype/backend/
   tests/
     __init__.py
-    conftest.py          ← fixtures: temp_db, client, user_a, user_b, make_test_conn()
-    test_unit.py         ← 23 pure-function / in-memory tests
-    test_integration.py  ← 27 full HTTP cycle tests via TestClient
+    conftest.py                    ← fixtures: temp_db, client, user_a/b/c, connected_pair, make_test_conn()
+    test_unit.py                   ← 23 pure-function / in-memory tests
+    test_integration.py            ← 27 full HTTP cycle tests via TestClient
+    test_integration_extended.py   ← 34 additional tests: connection flow, chat, streaks, location, auth edge cases
   pytest.ini             ← testpaths, addopts (--cov, --cov-report)
   .coveragerc            ← omit .venv/*, tests/*
   coverage/              ← HTML report (committed)
@@ -161,34 +162,34 @@ Approximate run times:
 | Category | Time | Where it runs |
 |---|---|---|
 | Unit (23 tests) | ~4 s | local + CI |
-| Integration (27 tests) | ~14 s | local + CI |
-| Full suite (50 tests) | ~17 s | local + CI |
+| Integration (61 tests) | ~35 s | local + CI |
+| Full suite (84 tests) | ~39 s | local + CI |
 
 ---
 
 ### 2.5 Coverage Achieved
 
-Last updated: 2026-06-02 (commit 2fc3c60)
+Last updated: 2026-06-02 (commit cc7fa0c)
 
 | Test type | Tool | Coverage % |
 |---|---|---|
 | Unit | pytest-cov | ~45% (pure-function paths) |
-| Integration | pytest-cov | ~58% (route + DB paths) |
-| **Combined (overall)** | pytest-cov merged | **63%** |
+| Integration | pytest-cov | ~84% (route + DB paths) |
+| **Combined (overall)** | pytest-cov merged | **86%** |
 
 File-level breakdown:
 
 | File | Statements | Missed | Coverage |
 |---|---|---|---|
-| `auth.py` | 39 | 2 | **95%** |
+| `auth.py` | 39 | 0 | **100%** |
 | `database.py` | 18 | 0 | **100%** |
-| `main.py` | 519 | 219 | **58%** |
+| `main.py` | 519 | 82 | **84%** |
 | `models.py` | 24 | 0 | **100%** |
-| **Total** | **600** | **221** | **63%** |
+| **Total** | **600** | **82** | **86%** |
 
 **What's NOT covered and why:**
 
-The uncovered 37% is almost entirely in `main.py`. The main gaps are: (1) the WebSocket handler (`/ws/{user_id}`) and the `push`/`broadcast` async helpers — these require a live WS connection that TestClient does not simulate without significant async harness work; (2) the photo upload endpoint (`POST /api/users/me/photo`) — skipped because multipart file fixtures add complexity with low payoff for route logic that is already validated by the content-type and size checks; (3) chat thread and message endpoints — the happy path works but thread-level flows (accept request → open thread → send message → streak increment) require multi-step sequences that were prioritized below auth/privacy testing given time constraints. The two uncovered lines in `auth.py` are the `_credentials_exc` helper called only on edge-case token decode failure already covered implicitly by the 401 integration tests.
+The remaining 14% is concentrated in `main.py`. The uncovered paths are: (1) the WebSocket endpoint handler (`/ws/{user_id}`, lines 974–1042) — requires a persistent WS connection; FastAPI's `TestClient` does not simulate the full async WS loop without a dedicated async test harness; (2) the `push` and `broadcast` inner bodies (lines 79–92) — these helpers only execute code when a live WebSocket is connected in `connected_clients`, which is never true in HTTP-only tests; (3) the photo upload endpoint (`POST /api/users/me/photo`, lines 273–291) — excluded because multipart binary fixtures add setup complexity for a route whose logic (MIME check, size cap, filename derivation) is already unit-testable without HTTP; (4) a small number of rarely-hit branches (e.g. `tagId already in current_tags` guard at line 357, the `last_dt is None` streak branch at 864–868). These represent genuinely hard-to-reach defensive paths with low bug risk.
 
 ---
 
