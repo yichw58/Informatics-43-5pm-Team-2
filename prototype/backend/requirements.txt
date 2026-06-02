@@ -1,2 +1,8 @@
-fastapi>=0.100.0
-uvicorn[standard]>=0.20.0
+fastapi
+uvicorn[standard]
+python-jose[cryptography]
+passlib[bcrypt]
+bcrypt<4.1
+python-multipart
+aiofiles
+email-validator
