@@ -44,7 +44,7 @@
 - Status changes made by user A to user B's account return 403
 - The schedule/blackout suppression logic correctly suppresses location inside a blackout zone and outside the time window, and correctly permits it otherwise
 - Combined test coverage ≥ 60% of backend source lines (achieved: 86%)
-- All 50 tests pass on a fresh clone after `pip install -r requirements.txt`
+- All 84 tests pass on a fresh clone after running the setup commands in section 2.4
 
 ---
 
@@ -200,7 +200,6 @@ The remaining 14% is concentrated in `main.py`. The uncovered paths are: (1) the
 | Frontend component tests (React) | Not implemented | No Vitest/Jest harness set up; deferred — add in a future sprint with `npm run test` |
 | WebSocket event tests | Not implemented | TestClient WS async support is non-trivial; would need `websockets` library + async test setup |
 | End-to-end browser tests | Not implemented | No Playwright setup; time constraint |
-| Chat + streak integration tests | Partially implemented (leaderboard only) | Multi-step flow (accept request → open thread → send message) requires chained fixtures; would be the next test to add |
 | Performance / load testing | Not implemented | No k6/Locust; infrastructure not available in class scope |
 
 ---
