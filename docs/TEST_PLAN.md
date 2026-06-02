@@ -6,7 +6,7 @@
 
 ### 1.1 Scope
 
-| ✅ In scope | Why this matters |
+| In scope | Why this matters |
 |---|---|
 | User registration + login | Entry point to the whole app; a broken auth flow blocks every other feature |
 | JWT authentication + endpoint protection | Security boundary; every protected route depends on correct token validation |
@@ -21,7 +21,7 @@
 | `is_location_suppressed` logic (schedule + zone) | Safety-critical path; must suppress exactly when configured |
 | Password hashing and verification | Security primitive; broken verification locks users out |
 
-| ❌ Out of scope | Why excluded |
+| Out of scope | Why excluded |
 |---|---|
 | WebSocket real-time events | Requires a live WS connection; TestClient async WS support is complex and beyond class scope |
 | Profile photo upload | Requires multipart file fixtures and filesystem I/O; not core logic |
