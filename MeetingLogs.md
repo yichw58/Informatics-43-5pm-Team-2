@@ -18,3 +18,13 @@ Summary: We finished all of our solo exploration over the past week, so we got t
 In-person  
 Attendees: Arjun, Chloe, Andrew, Katrina, Yanjie  
 Summary: We decided on which user flows we would include in the mockups of our user interface. Additionally, we delegated who would work more on UI vs. testing, as we’re going to test as we create the UI and expand our prototype. We also discussed the timeframes in which we should finish our parts and how many aspects we’re planning to implement for our final demo.  
+
+**May 20, 2026**  
+In-person  
+Attendees: Arjun, Chloe, Andrew, Katrina, Yanjie  
+Summary: Had discussions about the user interface and made calls about what each menu should ideally look like. Separated between who would be working on creating the interface in Figma and who would be more focused on writing the summary and refletion portions. Completed a significant amount of work in regards to designing the interface.
+
+**May 27, 2026**  
+Virtual
+Attendees: Arjun, Chloe, Andrew, Katrina, Yanjie  
+Summary: Divided responsibilities amongst ourselves for HW4: Testing. Worked on our test plan and delegated portions of testing to different people. Decided who would modify our existing prototype to match the last UI design that we decided on and started to work on tests.
