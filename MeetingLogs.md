@@ -25,6 +25,6 @@ Attendees: Arjun, Chloe, Andrew, Katrina, Yanjie
 Summary: Had discussions about the user interface and made calls about what each menu should ideally look like. Separated between who would be working on creating the interface in Figma and who would be more focused on writing the summary and refletion portions. Completed a significant amount of work in regards to designing the interface.
 
 **May 27, 2026**  
-Virtual
+Virtual  
 Attendees: Arjun, Chloe, Andrew, Katrina, Yanjie  
 Summary: Divided responsibilities amongst ourselves for HW4: Testing. Worked on our test plan and delegated portions of testing to different people. Decided who would modify our existing prototype to match the last UI design that we decided on and started to work on tests.
