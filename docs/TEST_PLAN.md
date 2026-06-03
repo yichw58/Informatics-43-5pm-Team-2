@@ -141,7 +141,6 @@ prototype/backend/
     test_integration_extended.py   ← 34 additional tests: connection flow, chat, streaks, location, auth edge cases
   pytest.ini             ← testpaths, addopts (--cov, --cov-report)
   .coveragerc            ← omit .venv/*, tests/*
-  coverage/              ← HTML report (committed)
 ```
 
 Run commands (copy-paste on a fresh clone):
@@ -155,7 +154,7 @@ pip install pytest pytest-cov httpx
 python -m pytest -v
 ```
 
-The HTML coverage report is regenerated automatically into `prototype/backend/coverage/`. Open `prototype/backend/coverage/index.html` in any browser to view it.
+The HTML coverage report is regenerated automatically into `prototype/backend/coverage/` and also lives at the repo root as `coverage/`. Open `coverage/index.html` in any browser to view it.
 
 Approximate run times:
 
